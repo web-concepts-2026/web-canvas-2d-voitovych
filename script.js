@@ -14,12 +14,20 @@ const ctx = canvas.getContext('2d');
 let prevX = null;
 let prevY = null;
 
+let hist = [];
+
+function saveHist(){
+    const lastImg = ctx.getImageData(0,0,canvas.width, canvas.height);
+    hist.push(lastImg);
+}
+
 function* canvasState(onDraw, onIdle){
     let drawing = false;
     while(true){
         const event = yield;
         if(event.type === 'mousedown'){
             drawing = true;
+            saveHist();
             onDraw(event.offsetX, event.offsetY);
         }
         else if(event.type === 'mousemove' && drawing){
@@ -84,4 +92,12 @@ colorOfPenc.addEventListener('input', ()=>{
 
 btnToClear.addEventListener('click',()=>{
     ctx.clearRect(0,0,canvas.width, canvas.height);
+});
+
+btnToUndo.addEventListener('click', ()=>{
+    if(hist.length === 0){
+        return;
+    }
+    const prevImg = hist.pop();
+    ctx.putImageData(prevImg, 0,0);
 })
