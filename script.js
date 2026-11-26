@@ -31,6 +31,7 @@ function* canvasState(onDraw, onIdle){
         }
     }
 }
+let curColor = colorOfPenc.value;
 const state = canvasState(
     (x,y)=>{
         ctx.beginPath();
@@ -43,7 +44,7 @@ const state = canvasState(
         ctx.lineTo(x,y);
         prevX = x;
         prevY = y;
-        ctx.strokeStyle = colorOfPenc.value;
+        ctx.strokeStyle = curColor;
         ctx.lineWidth = sizeOfPenc.value;
         ctx.lineCap = 'round';
         ctx.stroke();
@@ -67,3 +68,20 @@ canvas.addEventListener('mouseleave',(e)=>{
 canvas.addEventListener('mouseup', (e)=>{
     state.next(e);
 });
+
+
+btnToDraw.addEventListener('click', ()=>{
+    curColor = colorOfPenc.value;
+});
+
+btnToErase.addEventListener('click', ()=>{
+    curColor = 'rgb(255, 250, 240)';
+});
+
+colorOfPenc.addEventListener('input', ()=>{
+    curColor = colorOfPenc.value;
+});
+
+btnToClear.addEventListener('click',()=>{
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+})
