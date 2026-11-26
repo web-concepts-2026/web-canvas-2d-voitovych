@@ -1,0 +1,30 @@
+body{
+    font-family: Arial, sans-serif;
+    background-color: beige;
+    text-align:center;
+    margin-top: 35px;
+}
+
+.toolbar{
+    margin-bottom: 15px;
+}
+
+button{
+    width:40px;
+    height:40px;
+    background-color: blanchedalmond;
+    border: 2px solid black;
+    margin: 0 5px;
+}
+
+.settings{
+    display:flex;
+    justify-content:center;
+    align-items: center;
+    padding:15px;
+    margin-bottom: 15px;
+}
+canvas{
+    background-color: floralwhite;
+    border: 2px solid brown;
+}
