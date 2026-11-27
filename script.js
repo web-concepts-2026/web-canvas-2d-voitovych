@@ -5,11 +5,20 @@ const btnToDraw = document.getElementById('btnToDraw');
 const btnToUndo = document.getElementById('btnToUndo');
 const btnToErase = document.getElementById('btnToErase');
 const btnToClear = document.getElementById('btnToClear');
+const btnToStamp = document.getElementById('btnToStamp');
 
 canvas.width = 500;
 canvas.height = 500;
 const ctx = canvas.getContext('2d');
 
+const imgToStamp = new Image();
+imgToStamp.src = 'heart.png';
+
+const stampTool = {
+    stamp: 1,
+    notStamp: 0
+}
+let curStateOfStamp = stampTool.notStamp;
 
 let prevX = null;
 let prevY = null;
@@ -30,7 +39,7 @@ function* canvasState(onDraw, onIdle){
             saveHist();
             onDraw(event.offsetX, event.offsetY);
         }
-        else if(event.type === 'mousemove' && drawing){
+        else if(event.type === 'mousemove' && drawing && curStateOfStamp === stampTool.notStamp){
             onDraw(event.offsetX, event.offsetY);
         }
         else if(event.type === 'mouseleave' || event.type === 'mouseup'){
@@ -39,9 +48,14 @@ function* canvasState(onDraw, onIdle){
         }
     }
 }
+
 let curColor = colorOfPenc.value;
 const state = canvasState(
     (x,y)=>{
+        if(curStateOfStamp === stampTool.stamp){
+            ctx.drawImage(imgToStamp,x,y,50,50);
+            return;
+        }
         ctx.beginPath();
         if(prevX === null && prevY === null){
             ctx.moveTo(x,y);   
@@ -79,10 +93,12 @@ canvas.addEventListener('mouseup', (e)=>{
 
 
 btnToDraw.addEventListener('click', ()=>{
+    curStateOfStamp = stampTool.notStamp;
     curColor = colorOfPenc.value;
 });
 
 btnToErase.addEventListener('click', ()=>{
+    curStateOfStamp = stampTool.notStamp;
     curColor = 'rgb(255, 250, 240)';
 });
 
@@ -93,6 +109,10 @@ colorOfPenc.addEventListener('input', ()=>{
 btnToClear.addEventListener('click',()=>{
     ctx.clearRect(0,0,canvas.width, canvas.height);
 });
+
+btnToStamp.addEventListener('click',()=>{
+    curStateOfStamp = stampTool.stamp;
+})
 
 btnToUndo.addEventListener('click', ()=>{
     if(hist.length === 0){
